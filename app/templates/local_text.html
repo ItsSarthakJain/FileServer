@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Local Text Editor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #1f2937;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    pre, textarea {
+      background-color: #f3f4f6;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: Consolas, monospace;
+      font-size: 15px;
+      width: 100%;
+      box-sizing: border-box;
+      border: none;
+      margin-top: 10px;
+    }
+    textarea {
+      resize: vertical;
+      display: none;
+      min-height: 200px;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .buttons button, .buttons a.back-link {
+      background: #e5e7eb;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: #111827;
+      transition: background 0.3s;
+      text-decoration: none;
+    }
+    .buttons button:hover, .buttons a.back-link:hover {
+      background: #d1d5db;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📝 Local Text Editor</h1>
+
+    <div class="buttons">
+      <button onclick="copyText()">Copy</button>
+      <button onclick="toggleEdit()" id="edit-btn">Edit</button>
+      <button type="submit" form="edit-form" style="display: none;" id="save-btn">Save</button>
+      <button onclick="clearText()" style="display: none;" id="clear-btn">Clear All</button>
+      <a href="/" class="back-link">← Back</a>
+    </div>
+
+    <pre id="text-view">{{ content }}</pre>
+    <form id="edit-form" action="/create_local_text" method="post">
+      <textarea id="text-edit" name="content">{{ content }}</textarea>
+    </form>
+  </div>
+
+  <script>
+    let isEditing = false;
+    const textView = document.getElementById('text-view');
+    const textEdit = document.getElementById('text-edit');
+    const editBtn = document.getElementById('edit-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const clearBtn = document.getElementById('clear-btn');
+
+    function toggleEdit() {
+      if (isEditing) {
+        textView.style.display = 'block';
+        textEdit.style.display = 'none';
+        saveBtn.style.display = 'none';
+        clearBtn.style.display = 'none';
+        editBtn.textContent = 'Edit';
+      } else {
+        textView.style.display = 'none';
+        textEdit.style.display = 'block';
+        saveBtn.style.display = 'inline-block';
+        clearBtn.style.display = 'inline-block';
+        editBtn.textContent = 'Cancel';
+      }
+      isEditing = !isEditing;
+    }
+
+    function copyText() {
+      navigator.clipboard.writeText(textView.textContent);
+      alert('Text copied to clipboard!');
+    }
+
+    function clearText() {
+      if (confirm('Are you sure you want to clear all text?')) {
+        textEdit.value = '';
+      }
+    }
+  </script>
+</body>
+</html>
